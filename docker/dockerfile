@@ -18,6 +18,8 @@ RUN apt-get install debconf-utils
 RUN echo 'edb-as15-server edb/region select Asia' | debconf-set-selections
 RUN echo 'edb-as15-server edb/timezone select Ulaanbaatar' | debconf-set-selections
 
+COPY .\cloud_231013_customer.sql C:\Docker\Cloud\CloudDatabaseClient\dump\
+
 RUN apt-get update && apt-get -y install edb-as15-server 
 
 
