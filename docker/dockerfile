@@ -9,6 +9,7 @@ FROM ubuntu:latest
 ENV DEBIAN_FRONTEND=noninteractive
 
 
+
 # Copy your WAR file from a URL or the local filesystem to the deployments directory
 RUN apt-get update && apt-get install -y curl
 RUN curl -1sLf 'https://downloads.enterprisedb.com/KNGsUSPt52tBtkMq2EFf3aHLMrNPpSxy/enterprise/setup.deb.sh' | bash
@@ -18,10 +19,12 @@ RUN apt-get install debconf-utils
 RUN echo 'edb-as15-server edb/region select Asia' | debconf-set-selections
 RUN echo 'edb-as15-server edb/timezone select Ulaanbaatar' | debconf-set-selections
 
-COPY .\cloud_231013_customer.sql C:\Docker\Cloud\CloudDatabaseClient\dump\
+COPY cloud_231013_customer.sql /tmp/cloud_231013_customer.sql
 
 RUN apt-get update && apt-get -y install edb-as15-server 
 
+# RUN psql -U enterprisedb -h localhost -p 5432 -d cloud_customer_uat < /tmp/cloud_231013_customer.sql
+# RUN psql -U enterprisedb -h localhost  -d cloud_customer_uat < /tmp/cloud_231013_customer.sql
 
 
 
@@ -39,5 +42,11 @@ ENV DB_PASS="dbpassword"
 ENV DB_SID="dbsid"
 ENV DB_DRIVER="mysql"
 
+
 # Start supervisor
+
+# RUN chmod +x ./entry.sh
+
+# WORKDIR .
+# ENTRYPOINT ["entry.sh"]
 CMD ["tail", "-f", "/dev/null"]
